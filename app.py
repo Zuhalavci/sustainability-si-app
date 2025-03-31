@@ -3,11 +3,9 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
-st.set_page_config(page_title="Dynamic Sustainability Index Tool", layout="wide")
+st.set_page_config(page_title="Dynamic Sustainability Index Tool", layout="centered")
 st.title("🌀 Dynamic Sustainability Index Calculator")
-st.markdown("""
-This tool allows users to compare the Sustainability Index (SI) of different micro-drilling methods by adjusting the importance weights of various sustainability criteria.
-""")
+st.markdown("This tool allows users to compare the Sustainability Index (SI) of different micro-drilling methods by adjusting the importance weights of various sustainability criteria.")
 
 # Criteria and default weights
 criteria = ['Energy', 'CO2', 'Cost', 'Tool Wear', 'Fluid Usage', 'Social Impact']
@@ -27,22 +25,22 @@ normalized_values = {
     "Conventional": [0.00, 0.00, 0.30, 0.10, 1.00, 1.00]
 }
 
-# Sidebar sliders to adjust weights
-st.sidebar.title("🎛️ Adjust Criteria Weights")
-weights = {}
-total_weight = 0
-for crit in criteria:
-    val = st.sidebar.slider(crit, 0.0, 1.0, def_weights[crit], 0.01)
-    weights[crit] = val
-    total_weight += val
+st.markdown("### 🎛️ Adjust Criteria Weights")
 
-# Normalize weights to sum to 1
-if total_weight == 0:
-    st.sidebar.warning("Total weight cannot be zero.")
-    st.stop()
+with st.expander("Click here to set your own criteria weights", expanded=True):
+    weights = {}
+    total_weight = 0
+    for crit in criteria:
+        val = st.slider(crit, 0.0, 1.0, def_weights[crit], 0.01)
+        weights[crit] = val
+        total_weight += val
 
-for crit in weights:
-    weights[crit] /= total_weight
+    if total_weight == 0:
+        st.warning("Total weight cannot be zero.")
+        st.stop()
+
+    for crit in weights:
+        weights[crit] /= total_weight
 
 # Calculate Sustainability Index
 methods = list(normalized_values.keys())
@@ -67,4 +65,4 @@ fig.update_layout(yaxis=dict(range=[0, 1]))
 st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("---")
-st.markdown("💡 Adjust the sliders on the left panel to reflect different sustainability priorities.")
+st.markdown("💡 This version is optimized for mobile devices. Sliders are available above via expandable section.")
